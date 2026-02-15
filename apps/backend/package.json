@@ -13,11 +13,7 @@
     "start:stage": "APP_ENV=stage node dist/server.js",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "prisma:generate": "APP_ENV=development prisma generate",
-    "prisma:generate:stage": "APP_ENV=stage prisma generate",
-    "prisma:generate:prod": "APP_ENV=production prisma generate",
-    "prisma:migrate": "APP_ENV=development prisma migrate dev",
-    "prisma:migrate:stage": "APP_ENV=stage prisma migrate dev",
-    "prisma:migrate:prod": "APP_ENV=production prisma migrate dev"
+    "prisma:migrate": "APP_ENV=development prisma migrate dev"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.4.0",

@@ -9,5 +9,3 @@ apps/frontend/.vite
 apps/frontend/dist
 apps/backend/dist
 apps/backend/generated
-apps/backend/prisma/migrations
-
