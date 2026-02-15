@@ -1,0 +1,12 @@
+{
+  "name": "supportdesk-monorepo",
+  "private": true,
+  "packageManager": "pnpm@9.0.0",
+  "scripts": {
+    "dev:frontend": "pnpm --filter @supportdesk/frontend dev",
+    "dev:backend": "pnpm --filter @supportdesk/backend dev",
+    "dev": "pnpm -r --parallel --filter @supportdesk/frontend --filter @supportdesk/backend dev",
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck"
+  }
+}

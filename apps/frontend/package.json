@@ -1,0 +1,29 @@
+{
+  "name": "@supportdesk/frontend",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --mode development",
+    "dev:stage": "vite --mode stage",
+    "dev:prod": "vite --mode production",
+    "build": "vue-tsc --noEmit && vite build --mode production",
+    "build:stage": "vue-tsc --noEmit && vite build --mode stage",
+    "build:prod": "vue-tsc --noEmit && vite build --mode production",
+    "preview": "vite preview --mode production",
+    "preview:stage": "vite preview --mode stage",
+    "preview:prod": "vite preview --mode production",
+    "typecheck": "vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "@supportdesk/shared-types": "workspace:*",
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.1",
+    "sass": "^1.83.4",
+    "typescript": "^5.7.3",
+    "vite": "^6.0.11",
+    "vue-tsc": "^2.2.0"
+  }
+}
