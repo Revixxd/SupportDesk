@@ -96,30 +96,9 @@ import UiAvatar from '@ui/UiAvatar/UiAvatar.vue';
 import UiBadge from '@ui/UiBadge/UiBadge.vue';
 import UiButton from '@ui/UiButton/UiButton.vue';
 import UiTabPill from '@ui/UiTabPill/UiTabPill.vue';
+import type { UiTicketManagementProps } from './UiTicketManagement.types';
 
-type Priority = 'high' | 'medium' | 'low';
-type Status = 'New' | 'Open' | 'Pending' | 'Resolved' | 'Closed';
-
-const props = defineProps<{
-  tabs: Array<{ label: string; count: number; active?: boolean }>;
-  tickets: Array<{
-    id: string;
-    subject: string;
-    description: string;
-    requester: string;
-    requesterRole: string;
-    priority: Priority;
-    status: Status;
-    statusVariant: 'info' | 'warning' | 'success' | 'danger' | 'neutral';
-    updatedAt: string;
-    avatarTone: string;
-  }>;
-  priorityLabel: Record<Priority, string>;
-  footerLabel: string;
-  loading?: boolean;
-  currentPage?: number;
-  totalPages?: number;
-}>();
+const props = defineProps<UiTicketManagementProps>();
 
 const emit = defineEmits<{
   (eventName: 'change-page', page: number): void;

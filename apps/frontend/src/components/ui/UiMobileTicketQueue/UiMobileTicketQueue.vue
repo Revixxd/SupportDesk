@@ -96,37 +96,9 @@
 <script setup lang="ts">
 import UiAvatar from '@ui/UiAvatar/UiAvatar.vue';
 import UiIcon from '@ui/UiIcon/UiIcon.vue';
-import type { UiIconName } from '@ui/UiIcon/icon.types';
+import type { UiMobileTicketQueueProps } from './UiMobileTicketQueue.types';
 
-type MobileStatus = 'new' | 'in-progress' | 'closed';
-
-defineProps<{
-  title: string;
-  dateLabel: string;
-  tabs: Array<{ label: string; active?: boolean; count?: number }>;
-  tickets: Array<{
-    id: string;
-    title: string;
-    description: string;
-    requester: string;
-    avatarTone: string;
-    updatedAt: string;
-    status: MobileStatus;
-    alert?: boolean;
-    crossedOut?: boolean;
-  }>;
-  statusLabel: Record<MobileStatus, string>;
-  bottomNav: Array<{
-    label: string;
-    icon: Extract<UiIconName, 'home' | 'tickets' | 'notification' | 'profile'>;
-    active?: boolean;
-  }>;
-  loading?: boolean;
-  currentPage?: number;
-  totalPages?: number;
-  canPrevPage?: boolean;
-  canNextPage?: boolean;
-}>();
+defineProps<UiMobileTicketQueueProps>();
 
 const emit = defineEmits<{
   (eventName: 'select-tab', label: string): void;

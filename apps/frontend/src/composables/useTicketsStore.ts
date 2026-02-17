@@ -2,6 +2,11 @@ import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useTickets } from '../stores/tickets';
 import type { TicketPriority, TicketStatus } from '../types/tickets';
+import type {
+  DesktopPriorityLabel,
+  MobileBottomNavItem,
+  MobileStatusLabel,
+} from './useTicketsStore.types';
 import {
   formatDateTime,
   formatRelativeTime,
@@ -9,13 +14,14 @@ import {
   getRequesterName,
 } from '../utils/ticket-format';
 
-const desktopStatusLabel: Record<TicketStatus, 'New' | 'Open' | 'Pending' | 'Resolved' | 'Closed'> = {
-  NEW: 'New',
-  OPEN: 'Open',
-  PENDING: 'Pending',
-  RESOLVED: 'Resolved',
-  CLOSED: 'Closed',
-};
+const desktopStatusLabel: Record<TicketStatus, 'New' | 'Open' | 'Pending' | 'Resolved' | 'Closed'> =
+  {
+    NEW: 'New',
+    OPEN: 'Open',
+    PENDING: 'Pending',
+    RESOLVED: 'Resolved',
+    CLOSED: 'Closed',
+  };
 
 const desktopPriorityLabel: Record<TicketPriority, 'Low' | 'Medium' | 'High' | 'Urgent'> = {
   LOW: 'Low',
@@ -32,7 +38,10 @@ const mobileStatusMap: Record<TicketStatus, 'new' | 'in-progress' | 'closed'> = 
   CLOSED: 'closed',
 };
 
-const desktopStatusVariant: Record<TicketStatus, 'info' | 'warning' | 'success' | 'danger' | 'neutral'> = {
+const desktopStatusVariant: Record<
+  TicketStatus,
+  'info' | 'warning' | 'success' | 'danger' | 'neutral'
+> = {
   NEW: 'info',
   OPEN: 'info',
   PENDING: 'warning',
@@ -47,14 +56,24 @@ const desktopPriorityClass: Record<TicketPriority, 'low' | 'medium' | 'high'> = 
   URGENT: 'high',
 };
 
-type MobileNavIcon = 'home' | 'tickets' | 'notification' | 'profile';
-
-const mobileBottomNav: Array<{ label: string; icon: MobileNavIcon; active: boolean }> = [
+const mobileBottomNav: MobileBottomNavItem[] = [
   { label: 'Home', icon: 'home', active: false },
   { label: 'Tickets', icon: 'tickets', active: true },
   { label: 'Alerts', icon: 'notification', active: false },
   { label: 'Profile', icon: 'profile', active: false },
 ];
+
+const priorityLabel: DesktopPriorityLabel = {
+  high: 'High',
+  medium: 'Medium',
+  low: 'Low',
+};
+
+const statusLabel: MobileStatusLabel = {
+  new: 'New',
+  'in-progress': 'In Progress',
+  closed: 'Closed',
+};
 
 export const useTicketsStore = () => {
   const ticketsStore = useTickets();
@@ -231,22 +250,17 @@ export const useTicketsStore = () => {
     isListLoading,
     isDetailLoading,
     error,
-    priorityLabel: {
-      high: 'High',
-      medium: 'Medium',
-      low: 'Low',
-    } as const,
-    statusLabel: {
-      new: 'New',
-      'in-progress': 'In Progress',
-      closed: 'Closed',
-    } as const,
+    priorityLabel,
+    statusLabel,
     mobileBottomNav,
     mobileTabs: computed(() => [
       { label: 'All', active: activeStatus.value === null },
       { label: 'New', active: activeStatus.value === 'NEW' || activeStatus.value === 'OPEN' },
       { label: 'In Progress', active: activeStatus.value === 'PENDING' },
-      { label: 'Closed', active: activeStatus.value === 'CLOSED' || activeStatus.value === 'RESOLVED' },
+      {
+        label: 'Closed',
+        active: activeStatus.value === 'CLOSED' || activeStatus.value === 'RESOLVED',
+      },
     ]),
     canPrevPage,
     canNextPage,

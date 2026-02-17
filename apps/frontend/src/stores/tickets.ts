@@ -7,18 +7,7 @@ import type {
   TicketListResponse,
   TicketStatus,
 } from '../types/tickets';
-
-export interface TicketsState {
-  items: Ticket[];
-  currentTicket: Ticket | null;
-  meta: TicketListMeta;
-  listParams: Required<Pick<TicketListParams, 'page' | 'pageSize' | 'sortBy' | 'sortOrder'>> & {
-    status?: TicketStatus[];
-  };
-  isListLoading: boolean;
-  isDetailLoading: boolean;
-  error: string | null;
-}
+import type { TicketsState } from './tickets.types';
 
 const DEFAULT_META: TicketListMeta = {
   page: 1,
