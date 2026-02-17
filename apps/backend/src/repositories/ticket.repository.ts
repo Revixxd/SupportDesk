@@ -1,12 +1,14 @@
 import { prisma } from '../../lib/prisma.js';
+import type { TicketStatus } from '../../generated/prisma/enums';
 import type { TicketListFilters } from '../types/ticket.js';
 
 const includeRequester = { requester: true };
+const ALL_STATUSES: TicketStatus[] = ['NEW', 'OPEN', 'PENDING', 'RESOLVED', 'CLOSED'];
 
-const buildWhere = (filters: TicketListFilters) => {
+const buildWhere = (filters: TicketListFilters, includeStatus = true) => {
   const where: Record<string, unknown> = {};
 
-  if (filters.status?.length) {
+  if (includeStatus && filters.status?.length) {
     where.status = { in: filters.status };
   }
 
@@ -82,6 +84,7 @@ const buildWhere = (filters: TicketListFilters) => {
 
 const list = async (filters: TicketListFilters) => {
   const where = buildWhere(filters);
+  const whereForStatusCounts = buildWhere(filters, false);
 
   const orderBy = {
     [filters.sortBy]: filters.sortOrder,
@@ -89,7 +92,7 @@ const list = async (filters: TicketListFilters) => {
 
   const skip = (filters.page - 1) * filters.pageSize;
 
-  const [items, total] = await Promise.all([
+  const [items, total, groupedStatusCounts] = await Promise.all([
     prisma.ticket.findMany({
       where,
       orderBy,
@@ -98,9 +101,28 @@ const list = async (filters: TicketListFilters) => {
       include: includeRequester,
     }),
     prisma.ticket.count({ where }),
+    prisma.ticket.groupBy({
+      by: ['status'],
+      where: whereForStatusCounts,
+      _count: {
+        status: true,
+      },
+    }),
   ]);
 
-  return { items, total };
+  const statusCounts = ALL_STATUSES.reduce(
+    (accumulator, status) => {
+      accumulator[status] = 0;
+      return accumulator;
+    },
+    {} as Record<TicketStatus, number>,
+  );
+
+  for (const row of groupedStatusCounts) {
+    statusCounts[row.status] = row._count.status;
+  }
+
+  return { items, total, statusCounts };
 };
 
 const getById = async (id: string) => {

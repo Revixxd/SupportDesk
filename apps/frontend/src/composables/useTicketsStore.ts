@@ -81,32 +81,18 @@ export const useTicketsStore = () => {
     storeToRefs(ticketsStore);
 
   const activeStatus = computed(() => listParams.value.status?.[0] ?? null);
-  const countsOnPage = computed(() => {
-    return items.value.reduce(
-      (acc, ticket) => {
-        acc[ticket.status] += 1;
-        return acc;
-      },
-      {
-        NEW: 0,
-        OPEN: 0,
-        PENDING: 0,
-        RESOLVED: 0,
-        CLOSED: 0,
-      } as Record<TicketStatus, number>,
-    );
-  });
 
   const tabs = computed(() => {
     const active = activeStatus.value;
+    const counts = meta.value.statusCounts;
 
     return [
       { label: 'All Tickets', count: meta.value.total, active: active === null },
-      { label: 'New', count: countsOnPage.value.NEW, active: active === 'NEW' },
-      { label: 'Open', count: countsOnPage.value.OPEN, active: active === 'OPEN' },
-      { label: 'Pending', count: countsOnPage.value.PENDING, active: active === 'PENDING' },
-      { label: 'Resolved', count: countsOnPage.value.RESOLVED, active: active === 'RESOLVED' },
-      { label: 'Closed', count: countsOnPage.value.CLOSED, active: active === 'CLOSED' },
+      { label: 'New', count: counts.NEW, active: active === 'NEW' },
+      { label: 'Open', count: counts.OPEN, active: active === 'OPEN' },
+      { label: 'Pending', count: counts.PENDING, active: active === 'PENDING' },
+      { label: 'Resolved', count: counts.RESOLVED, active: active === 'RESOLVED' },
+      { label: 'Closed', count: counts.CLOSED, active: active === 'CLOSED' },
     ];
   });
 

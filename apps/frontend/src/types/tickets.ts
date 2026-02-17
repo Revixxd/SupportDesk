@@ -31,6 +31,8 @@ export interface Ticket {
 
 export type TicketSortBy = 'createdAt' | 'updatedAt' | 'priority' | 'status' | 'publicKey';
 
+export type TicketStatusCounts = Record<TicketStatus, number>;
+
 export interface TicketListMeta {
   page: number;
   pageSize: number;
@@ -38,6 +40,7 @@ export interface TicketListMeta {
   totalPages: number;
   sortBy: TicketSortBy;
   sortOrder: 'asc' | 'desc';
+  statusCounts: TicketStatusCounts;
 }
 
 export interface TicketListResponse {

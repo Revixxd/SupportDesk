@@ -16,6 +16,13 @@ const DEFAULT_META: TicketListMeta = {
   totalPages: 1,
   sortBy: 'createdAt',
   sortOrder: 'desc',
+  statusCounts: {
+    NEW: 0,
+    OPEN: 0,
+    PENDING: 0,
+    RESOLVED: 0,
+    CLOSED: 0,
+  },
 };
 
 const parseApiError = (error: unknown): string => {

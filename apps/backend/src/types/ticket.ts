@@ -24,3 +24,5 @@ export interface TicketListFilters {
   page: number;
   pageSize: number;
 }
+
+export type TicketStatusCounts = Record<TicketStatus, number>;
