@@ -1,5 +1,10 @@
 <template>
-  <button class="ui-sidebar-item" :class="{ 'is-active': active }" type="button">
+  <button
+    class="ui-sidebar-item"
+    :class="{ 'is-active': active }"
+    type="button"
+    :aria-label="label"
+  >
     <span class="ui-sidebar-item__icon" aria-hidden="true">
       <UiIcon :name="icon" />
     </span>

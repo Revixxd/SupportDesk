@@ -5,9 +5,9 @@
         <h1>{{ title }}</h1>
         <p>{{ dateLabel }}</p>
       </div>
-      <button type="button" class="ui-mobile-queue__search" aria-label="Search">
+      <!-- <button type="button" class="ui-mobile-queue__search" aria-label="Search">
         <UiIcon name="search" />
-      </button>
+      </button> -->
     </header>
 
     <div class="ui-mobile-queue__tabs">
@@ -17,6 +17,7 @@
         type="button"
         class="queue-tab"
         :class="{ 'is-active': tab.active }"
+        @click="emit('select-tab', tab.label)"
       >
         <span>{{ tab.label }}</span>
         <span v-if="tab.count" class="queue-tab__count">{{ tab.count }}</span>
@@ -24,8 +25,11 @@
     </div>
 
     <div class="ui-mobile-queue__list">
+      <p v-if="loading" class="ui-mobile-queue__state">Loading tickets...</p>
+      <p v-else-if="tickets.length === 0" class="ui-mobile-queue__state">No tickets found.</p>
       <article
         v-for="ticket in tickets"
+        v-if="!loading && tickets.length > 0"
         :key="ticket.id"
         class="queue-card"
         :class="{ 'is-alert': ticket.alert, 'is-muted': ticket.crossedOut }"
@@ -52,6 +56,22 @@
           }}</span>
         </div>
       </article>
+    </div>
+    <div class="ui-mobile-queue__pagination">
+      <span>Page {{ currentPage }} of {{ totalPages }}</span>
+      <div class="ui-mobile-queue__pagination-actions">
+        <button
+          v-if="canPrevPage"
+          type="button"
+          :disabled="loading"
+          @click="emit('prev-page')"
+        >
+          Prev
+        </button>
+        <button type="button" :disabled="!canNextPage || loading" @click="emit('next-page')">
+          Next
+        </button>
+      </div>
     </div>
 
     <button class="ui-mobile-queue__fab" type="button" aria-label="Create ticket">
@@ -101,6 +121,17 @@ defineProps<{
     icon: Extract<UiIconName, 'home' | 'tickets' | 'notification' | 'profile'>;
     active?: boolean;
   }>;
+  loading?: boolean;
+  currentPage?: number;
+  totalPages?: number;
+  canPrevPage?: boolean;
+  canNextPage?: boolean;
+}>();
+
+const emit = defineEmits<{
+  (eventName: 'select-tab', label: string): void;
+  (eventName: 'prev-page'): void;
+  (eventName: 'next-page'): void;
 }>();
 </script>
 
