@@ -1,0 +1,61 @@
+.ui-button {
+  border: 1px solid transparent;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &__icon {
+    width: 1rem;
+    height: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &--sm {
+    height: 36px;
+    padding: 0 0.9rem;
+    font-size: 0.875rem;
+  }
+
+  &--md {
+    height: 40px;
+    padding: 0 1rem;
+    font-size: 0.95rem;
+  }
+
+  &--primary {
+    background: var(--color-accent);
+    color: var(--color-text-strong);
+
+    &:hover {
+      background: var(--color-accent-hover);
+    }
+  }
+
+  &--secondary {
+    background: transparent;
+    border-color: var(--color-border-strong);
+    color: var(--color-text-muted);
+
+    &:hover {
+      border-color: var(--color-border-focus);
+      color: var(--color-text-base);
+    }
+  }
+
+  &--ghost {
+    background: transparent;
+    color: var(--color-text-muted);
+
+    &:hover {
+      color: var(--color-text-base);
+      background: var(--color-surface-2);
+    }
+  }
+}
