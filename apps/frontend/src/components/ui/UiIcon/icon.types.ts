@@ -1,0 +1,15 @@
+export type UiIconName =
+  | "brand-supportdesk"
+  | "home"
+  | "dashboard"
+  | "tickets"
+  | "agents"
+  | "analytics"
+  | "settings"
+  | "help"
+  | "search"
+  | "notification"
+  | "profile"
+  | "plus"
+  | "filter"
+  | "export";

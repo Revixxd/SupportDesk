@@ -9,3 +9,4 @@ apps/frontend/.vite
 apps/frontend/dist
 apps/backend/dist
 apps/backend/generated
+*.tsbuildinfo

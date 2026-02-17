@@ -1,0 +1,84 @@
+$theme-dark: (
+  color-bg: #04152a,
+  color-surface-1: #0a1d33,
+  color-surface-2: #142a44,
+  color-surface-selected: #17365a,
+  color-sidebar-top: #10243c,
+  color-sidebar-bottom: #0f2338,
+  color-border-subtle: #1f3b5b,
+  color-border-strong: #2b4e74,
+  color-border-focus: #3a6fa5,
+  color-text-base: #dce9f8,
+  color-text-muted: #afc3dc,
+  color-text-subtle: #7f99b8,
+  color-text-strong: #f6f9ff,
+  color-text-brand: #42a3ff,
+  color-link: #50a8ff,
+  color-accent: #2292ff,
+  color-accent-hover: #3ca0ff,
+  color-info-bg: rgba(34, 146, 255, 0.16),
+  color-info-border: rgba(34, 146, 255, 0.36),
+  color-info-text: #5eb2ff,
+  color-warning-bg: rgba(232, 180, 53, 0.16),
+  color-warning-border: rgba(232, 180, 53, 0.4),
+  color-warning-text: #f3c75f,
+  color-success-bg: rgba(32, 180, 112, 0.16),
+  color-success-border: rgba(32, 180, 112, 0.45),
+  color-success-text: #47da94,
+  color-danger-bg: rgba(255, 86, 86, 0.16),
+  color-danger-border: rgba(255, 86, 86, 0.4),
+  color-danger-text: #ff6f6f,
+  avatar-fallback-bg: #334d72,
+  font-display: ("Sora", "Avenir Next", "Segoe UI", sans-serif),
+  font-body: ("Manrope", "Avenir Next", "Segoe UI", sans-serif)
+);
+
+$theme-light: (
+  color-bg: #eff5fb,
+  color-surface-1: #ffffff,
+  color-surface-2: #eaf2fc,
+  color-surface-selected: #d9e8fa,
+  color-sidebar-top: #f2f8ff,
+  color-sidebar-bottom: #edf4fc,
+  color-border-subtle: #c8d8ea,
+  color-border-strong: #b2c9e2,
+  color-border-focus: #6ea5df,
+  color-text-base: #16304d,
+  color-text-muted: #3d5c7f,
+  color-text-subtle: #5f7a98,
+  color-text-strong: #0d2137,
+  color-text-brand: #1e78d3,
+  color-link: #1e78d3,
+  color-accent: #278bf0,
+  color-accent-hover: #1d7de0,
+  color-info-bg: rgba(39, 139, 240, 0.14),
+  color-info-border: rgba(39, 139, 240, 0.35),
+  color-info-text: #1d67b3,
+  color-warning-bg: rgba(226, 171, 40, 0.16),
+  color-warning-border: rgba(226, 171, 40, 0.4),
+  color-warning-text: #9b6d05,
+  color-success-bg: rgba(31, 154, 90, 0.16),
+  color-success-border: rgba(31, 154, 90, 0.4),
+  color-success-text: #0f8b4f,
+  color-danger-bg: rgba(220, 86, 86, 0.15),
+  color-danger-border: rgba(220, 86, 86, 0.4),
+  color-danger-text: #c84545,
+  avatar-fallback-bg: #87a4c5,
+  font-display: ("Sora", "Avenir Next", "Segoe UI", sans-serif),
+  font-body: ("Manrope", "Avenir Next", "Segoe UI", sans-serif)
+);
+
+@mixin emit-theme($theme-map) {
+  @each $token, $value in $theme-map {
+    --#{$token}: #{$value};
+  }
+}
+
+:root,
+[data-theme="dark"] {
+  @include emit-theme($theme-dark);
+}
+
+[data-theme="light"] {
+  @include emit-theme($theme-light);
+}

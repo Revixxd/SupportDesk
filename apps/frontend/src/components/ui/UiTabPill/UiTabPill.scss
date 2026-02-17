@@ -1,0 +1,24 @@
+.ui-tab-pill {
+  border: 0;
+  border-radius: 8px;
+  padding: 0.65rem 1rem;
+  font-size: 1.05rem;
+  color: var(--color-text-muted);
+  background: transparent;
+  display: inline-flex;
+  gap: 0.45rem;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--color-text-base);
+  }
+
+  &.is-active {
+    background: var(--color-accent);
+    color: var(--color-text-strong);
+  }
+
+  &__count {
+    opacity: 0.9;
+  }
+}
