@@ -7,7 +7,60 @@ datasource db {
   provider = "postgresql"
 }
 
+enum TicketStatus {
+  NEW
+  OPEN
+  PENDING
+  RESOLVED
+  CLOSED
+}
+
+enum TicketPriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+enum TicketChannel {
+  EMAIL
+  WEB
+  PHONE
+  API
+}
+
+model Requester {
+  id        String   @id @default(uuid()) @db.Uuid
+  email     String   @unique
+  name      String?
+  phone     String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  tickets Ticket[]
+
+  @@map("requesters")
+}
+
 model Ticket {
-  id   String @id @default(uuid())
-  name String
+  id            String         @id @default(uuid()) @db.Uuid
+  publicKey     String         @unique @map("public_key")
+  requesterId   String         @db.Uuid @map("requester_id")
+  subject       String
+  description   String?
+  status        TicketStatus
+  priority      TicketPriority
+  channel       TicketChannel
+  assigneeName  String?        @map("assignee_name")
+  assigneeEmail String?        @map("assignee_email")
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+
+  requester Requester @relation(fields: [requesterId], references: [id])
+
+  @@index([requesterId])
+  @@index([status])
+  @@index([priority])
+  @@index([channel])
+  @@map("tickets")
 }
