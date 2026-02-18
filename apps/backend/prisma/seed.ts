@@ -89,6 +89,14 @@ const statuses: TicketStatusType[] = [
   TicketStatus.CLOSED,
 ];
 
+const weightedStatuses: Array<{ status: TicketStatusType; weight: number }> = [
+  { status: TicketStatus.NEW, weight: 0.15 },
+  { status: TicketStatus.OPEN, weight: 0.33 },
+  { status: TicketStatus.PENDING, weight: 0.22 },
+  { status: TicketStatus.RESOLVED, weight: 0.2 },
+  { status: TicketStatus.CLOSED, weight: 0.1 },
+];
+
 const priorities: TicketPriorityType[] = [
   TicketPriority.LOW,
   TicketPriority.NORMAL,
@@ -105,6 +113,25 @@ const channels: TicketChannelType[] = [
 
 const pick = <T>(items: readonly T[], index: number): T => {
   return items[index % items.length]!;
+};
+
+const seededRandom = (index: number): number => {
+  const value = Math.sin((index + 1) * 12.9898) * 43758.5453;
+  return value - Math.floor(value);
+};
+
+const pickWeightedStatus = (index: number): TicketStatusType => {
+  const randomValue = seededRandom(index);
+  let cumulativeWeight = 0;
+
+  for (const item of weightedStatuses) {
+    cumulativeWeight += item.weight;
+    if (randomValue <= cumulativeWeight) {
+      return item.status;
+    }
+  }
+
+  return statuses[statuses.length - 1]!;
 };
 
 const publicKeyFromIndex = (index: number): string => {
@@ -152,7 +179,7 @@ const seed = async () => {
       requesterId: requester.id,
       subject: pick(subjects, index),
       description: `${pick(descriptions, index)} (seed #${index + 1})`,
-      status: pick(statuses, index * 2),
+      status: pickWeightedStatus(index),
       priority: pick(priorities, index * 3),
       channel: pick(channels, index * 5),
       assigneeName: assignee.name,

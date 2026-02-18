@@ -7,8 +7,9 @@
             v-for="tab in tabs"
             :key="tab.label"
             :label="tab.label"
-            :count="tab.count"
+            :count="tab.count ?? 0"
             :active="tab.active"
+            @click="emit('select-tab', tab.label)"
           />
         </div>
 
@@ -31,9 +32,15 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="ticket in tickets" :key="ticket.id">
+            <tr v-if="loading">
+              <td colspan="6">Loading tickets...</td>
+            </tr>
+            <tr v-else-if="tickets.length === 0">
+              <td colspan="6">No tickets found.</td>
+            </tr>
+            <tr v-for="ticket in tickets" v-if="!loading && tickets.length > 0" :key="ticket.id">
               <td>
-                <a href="#">{{ ticket.id }}</a>
+                <RouterLink :to="`/ticket/${ticket.id}`">{{ ticket.id }}</RouterLink>
               </td>
               <td>
                 <strong>{{ ticket.subject }}</strong>
@@ -54,7 +61,7 @@
                 }}</span>
               </td>
               <td>
-                <UiBadge :variant="statusVariant[ticket.status]">{{ ticket.status }}</UiBadge>
+                <UiBadge :variant="ticket.statusVariant">{{ ticket.status }}</UiBadge>
               </td>
               <td>{{ ticket.updatedAt }}</td>
             </tr>
@@ -64,11 +71,17 @@
         <div class="ticket-table__footer">
           <p>{{ footerLabel }}</p>
           <div class="pagination">
-            <button type="button">&#8249;</button>
-            <button type="button" class="is-active">1</button>
-            <button type="button">2</button>
-            <button type="button">3</button>
-            <button type="button">&#8250;</button>
+            <button type="button" @click="emit('change-page', currentPage - 1)">&lt;</button>
+            <button
+              v-for="page in pageButtons"
+              :key="page"
+              type="button"
+              :class="{ 'is-active': page === currentPage }"
+              @click="emit('change-page', page)"
+            >
+              {{ page }}
+            </button>
+            <button type="button" @click="emit('change-page', currentPage + 1)">&gt;</button>
           </div>
         </div>
       </div>
@@ -77,31 +90,40 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
+import { RouterLink } from 'vue-router';
 import UiAvatar from '@ui/UiAvatar/UiAvatar.vue';
 import UiBadge from '@ui/UiBadge/UiBadge.vue';
 import UiButton from '@ui/UiButton/UiButton.vue';
 import UiTabPill from '@ui/UiTabPill/UiTabPill.vue';
+import type { UiTicketManagementProps } from './UiTicketManagement.types';
 
-type Priority = 'high' | 'medium' | 'low';
-type Status = 'Open' | 'Pending' | 'Resolved';
+const props = defineProps<UiTicketManagementProps>();
 
-defineProps<{
-  tabs: Array<{ label: string; count: number; active?: boolean }>;
-  tickets: Array<{
-    id: string;
-    subject: string;
-    description: string;
-    requester: string;
-    requesterRole: string;
-    priority: Priority;
-    status: Status;
-    updatedAt: string;
-    avatarTone: string;
-  }>;
-  statusVariant: Record<Status, 'info' | 'warning' | 'success'>;
-  priorityLabel: Record<Priority, string>;
-  footerLabel: string;
+const emit = defineEmits<{
+  (eventName: 'change-page', page: number): void;
+  (eventName: 'select-tab', label: string): void;
 }>();
+
+const currentPage = computed(() => props.currentPage ?? 1);
+const totalPages = computed(() => Math.max(1, props.totalPages ?? 1));
+const maxButtons = 5;
+
+const pageButtons = computed(() => {
+  const page = currentPage.value;
+  const pages = totalPages.value;
+
+  let start = Math.max(1, page - Math.floor(maxButtons / 2));
+  const end = Math.min(pages, start + maxButtons - 1);
+  start = Math.max(1, end - maxButtons + 1);
+
+  const result: number[] = [];
+  for (let value = start; value <= end; value += 1) {
+    result.push(value);
+  }
+
+  return result;
+});
 </script>
 
 <style scoped src="./UiTicketManagement.scss" lang="scss"></style>

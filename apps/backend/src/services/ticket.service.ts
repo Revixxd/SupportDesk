@@ -154,6 +154,7 @@ const listTickets = async (request: Request) => {
       totalPages: Math.max(1, Math.ceil(result.total / filters.pageSize)),
       sortBy: filters.sortBy,
       sortOrder: filters.sortOrder,
+      statusCounts: result.statusCounts,
     },
   };
 };

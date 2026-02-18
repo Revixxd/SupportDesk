@@ -1,19 +1,83 @@
 <template>
   <main class="ticket-detail" data-theme="dark">
     <header class="ticket-detail__header">
-      <h1>Ticket {{ ticketId }}</h1>
+      <h1>Ticket {{ currentTicketView?.id ?? routeTicketId }}</h1>
+      <p v-if="currentTicketView">Updated {{ currentTicketView.updatedAt }}</p>
     </header>
 
-    <section class="ticket-detail__card"></section>
+    <section class="ticket-detail__card">
+      <p v-if="isDetailLoading">Loading ticket details...</p>
+      <p v-else-if="error">{{ error }}</p>
+      <template v-else-if="currentTicketView">
+        <h2>{{ currentTicketView.subject }}</h2>
+        <p>{{ currentTicketView.description }}</p>
+        <div class="ticket-detail__meta-grid">
+          <div>
+            <span>Status</span>
+            <strong>{{ currentTicketView.status }}</strong>
+          </div>
+          <div>
+            <span>Priority</span>
+            <strong>{{ currentTicketView.priority }}</strong>
+          </div>
+          <div>
+            <span>Channel</span>
+            <strong>{{ currentTicketView.channel }}</strong>
+          </div>
+          <div>
+            <span>Created</span>
+            <strong>{{ currentTicketView.createdAt }}</strong>
+          </div>
+          <div>
+            <span>Requester</span>
+            <strong>{{ currentTicketView.requesterName }}</strong>
+            <p>{{ currentTicketView.requesterEmail }}</p>
+          </div>
+          <div>
+            <span>Assignee</span>
+            <strong>{{ currentTicketView.assigneeName }}</strong>
+            <p>{{ currentTicketView.assigneeEmail }}</p>
+          </div>
+        </div>
+      </template>
+      <p v-else>Ticket not found.</p>
+    </section>
   </main>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
+import { useTicketsStore } from '../../composables/useTicketsStore';
 
 const route = useRoute();
-const ticketId = computed(() => route.params.id);
+const { fetchTicketById, currentTicketView, isDetailLoading, error } = useTicketsStore();
+
+const routeTicketId = computed(() => {
+  const value = route.params.id;
+
+  if (Array.isArray(value)) {
+    return value[0] ?? '';
+  }
+
+  return typeof value === 'string' ? value : '';
+});
+
+const loadTicket = async () => {
+  if (!routeTicketId.value) {
+    return;
+  }
+
+  await fetchTicketById(routeTicketId.value);
+};
+
+onMounted(() => {
+  void loadTicket();
+});
+
+watch(routeTicketId, () => {
+  void loadTicket();
+});
 </script>
 
 <style scoped lang="scss">
@@ -55,6 +119,32 @@ const ticketId = computed(() => route.params.id);
       margin: 0.6rem 0 0;
       color: var(--color-text-muted);
       line-height: 1.45;
+    }
+  }
+
+  &__meta-grid {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(180px, 1fr));
+    gap: 1rem;
+
+    span {
+      display: block;
+      color: var(--color-text-subtle);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    strong {
+      display: block;
+      margin-top: 0.2rem;
+      color: var(--color-text-strong);
+    }
+
+    p {
+      margin: 0.3rem 0 0;
+      font-size: 0.9rem;
     }
   }
 }
