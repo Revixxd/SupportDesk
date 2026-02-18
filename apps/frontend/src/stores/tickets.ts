@@ -115,6 +115,28 @@ export const useTickets = defineStore('tickets', {
       }
     },
 
+    async updateTicketStatus(id: string, status: TicketStatus) {
+      this.error = null;
+
+      try {
+        const response = await http.patch<Ticket>(`/tickets/${id}/status`, { status });
+        this.currentTicket = response.data;
+
+        this.items = this.items.map((ticket) => {
+          if (ticket.id === response.data.id || ticket.publicKey === response.data.publicKey) {
+            return response.data;
+          }
+
+          return ticket;
+        });
+
+        return true;
+      } catch (error) {
+        this.error = parseApiError(error);
+        return false;
+      }
+    },
+
     async changePage(page: number) {
       if (page < 1 || page > this.meta.totalPages) {
         return;

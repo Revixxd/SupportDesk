@@ -163,9 +163,31 @@ const getTicketDetails = async (id: string) => {
   return ticketRepository.getById(id);
 };
 
+const parseTicketStatus = (value: unknown): TicketStatus => {
+  const parsed = parseString(value)?.toUpperCase();
+
+  if (!parsed) {
+    throw new BadRequestError('status is required');
+  }
+
+  if (!TICKET_STATUSES.includes(parsed as TicketStatus)) {
+    throw new BadRequestError(
+      `Invalid status: ${parsed}. Allowed values: ${TICKET_STATUSES.join(', ')}`,
+    );
+  }
+
+  return parsed as TicketStatus;
+};
+
+const updateTicketStatus = async (id: string, status: unknown) => {
+  const parsedStatus = parseTicketStatus(status);
+  return ticketRepository.updateStatus(id, parsedStatus);
+};
+
 export { BadRequestError, buildFilters };
 
 export const ticketService = {
   listTickets,
   getTicketDetails,
+  updateTicketStatus,
 };
