@@ -2,7 +2,7 @@ import type {
   TicketChannel,
   TicketPriority,
   TicketStatus,
-} from '../../generated/prisma/enums';
+} from '@prisma/client';
 
 export type TicketSortBy =
   | 'createdAt'

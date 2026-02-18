@@ -1,5 +1,5 @@
 import { prisma } from '../../lib/prisma.js';
-import type { TicketStatus } from '../../generated/prisma/enums';
+import type { TicketStatus } from '@prisma/client';
 import type { TicketListFilters } from '../types/ticket.js';
 
 const includeRequester = { requester: true };

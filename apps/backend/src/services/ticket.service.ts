@@ -3,7 +3,7 @@ import type {
   TicketChannel,
   TicketPriority,
   TicketStatus,
-} from '../../generated/prisma/enums';
+} from '@prisma/client';
 import { ticketRepository } from '../repositories/ticket.repository.js';
 import type { TicketListFilters, TicketSortBy } from '../types/ticket.js';
 

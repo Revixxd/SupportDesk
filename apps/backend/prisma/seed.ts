@@ -7,7 +7,7 @@ import {
   type TicketChannel as TicketChannelType,
   type TicketPriority as TicketPriorityType,
   type TicketStatus as TicketStatusType,
-} from '../generated/prisma/enums.js';
+} from '@prisma/client';
 
 const requesterFirstNames = [
   'Anna',
