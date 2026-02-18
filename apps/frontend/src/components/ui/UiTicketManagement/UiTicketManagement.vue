@@ -38,9 +38,19 @@
             <tr v-else-if="tickets.length === 0">
               <td colspan="6">No tickets found.</td>
             </tr>
-            <tr v-for="ticket in tickets" v-if="!loading && tickets.length > 0" :key="ticket.id">
+            <tr
+              v-for="ticket in tickets"
+              v-if="!loading && tickets.length > 0"
+              :key="ticket.id"
+              class="ticket-table__row"
+              role="button"
+              tabindex="0"
+              @click="emit('open-ticket', ticket.id)"
+              @keydown.enter="emit('open-ticket', ticket.id)"
+              @keydown.space.prevent="emit('open-ticket', ticket.id)"
+            >
               <td>
-                <RouterLink :to="`/ticket/${ticket.id}`">{{ ticket.id }}</RouterLink>
+                <span class="ticket-table__ticket-id">{{ ticket.id }}</span>
               </td>
               <td>
                 <strong>{{ ticket.subject }}</strong>
@@ -91,7 +101,6 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { RouterLink } from 'vue-router';
 import UiAvatar from '@ui/UiAvatar/UiAvatar.vue';
 import UiBadge from '@ui/UiBadge/UiBadge.vue';
 import UiButton from '@ui/UiButton/UiButton.vue';
@@ -103,6 +112,7 @@ const props = defineProps<UiTicketManagementProps>();
 const emit = defineEmits<{
   (eventName: 'change-page', page: number): void;
   (eventName: 'select-tab', label: string): void;
+  (eventName: 'open-ticket', ticketId: string): void;
 }>();
 
 const currentPage = computed(() => props.currentPage ?? 1);

@@ -6,5 +6,6 @@ const ticketRouter: Router = Router();
 ticketRouter.get('/', ticketController.listTickets);
 ticketRouter.get('/tickets', ticketController.listTickets);
 ticketRouter.get('/tickets/:id', ticketController.getTicketById);
+ticketRouter.patch('/tickets/:id/status', ticketController.updateTicketStatus);
 
 export { ticketRouter };

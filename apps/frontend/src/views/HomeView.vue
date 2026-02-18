@@ -10,6 +10,7 @@
       :loading="isListLoading"
       @change-page="changePage"
       @select-tab="setStatusByTab"
+      @open-ticket="openTicket"
     />
     <p v-if="error" class="home-view__error">{{ error }}</p>
   </div>
@@ -30,6 +31,7 @@
       @select-tab="setMobileStatusByTab"
       @prev-page="prevPage"
       @next-page="nextPage"
+      @open-ticket="openTicket"
     />
     <p v-if="error" class="home-view__error">{{ error }}</p>
   </div>
@@ -38,11 +40,13 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue';
 import { useMediaQuery } from '@vueuse/core';
+import { useRouter } from 'vue-router';
 import UiMobileTicketQueue from '@ui/UiMobileTicketQueue/UiMobileTicketQueue.vue';
 import UiTicketManagement from '@ui/UiTicketManagement/UiTicketManagement.vue';
 import { useTicketsStore } from '../composables/useTicketsStore';
 
 const isMobile = useMediaQuery('(max-width: 920px)');
+const router = useRouter();
 
 const {
   tabs,
@@ -77,6 +81,10 @@ const todayLabel = computed(() => {
 onMounted(() => {
   void fetchTickets();
 });
+
+const openTicket = (ticketId: string) => {
+  void router.push(`/ticket/${ticketId}`);
+};
 </script>
 
 <style scoped lang="scss">

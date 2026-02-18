@@ -33,6 +33,11 @@
         :key="ticket.id"
         class="queue-card"
         :class="{ 'is-alert': ticket.alert, 'is-muted': ticket.crossedOut }"
+        role="button"
+        tabindex="0"
+        @click="emit('open-ticket', ticket.id)"
+        @keydown.enter="emit('open-ticket', ticket.id)"
+        @keydown.space.prevent="emit('open-ticket', ticket.id)"
       >
         <div class="queue-card__meta">
           <p>
@@ -104,6 +109,7 @@ const emit = defineEmits<{
   (eventName: 'select-tab', label: string): void;
   (eventName: 'prev-page'): void;
   (eventName: 'next-page'): void;
+  (eventName: 'open-ticket', ticketId: string): void;
 }>();
 </script>
 

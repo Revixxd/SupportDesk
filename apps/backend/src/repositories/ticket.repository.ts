@@ -4,6 +4,10 @@ import type { TicketListFilters } from '../types/ticket.js';
 
 const includeRequester = { requester: true };
 const ALL_STATUSES: TicketStatus[] = ['NEW', 'OPEN', 'PENDING', 'RESOLVED', 'CLOSED'];
+const UUID_REGEX =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+const isUuid = (value: string) => UUID_REGEX.test(value);
 
 const buildWhere = (filters: TicketListFilters, includeStatus = true) => {
   const where: Record<string, unknown> = {};
@@ -126,17 +130,43 @@ const list = async (filters: TicketListFilters) => {
 };
 
 const getById = async (id: string) => {
+  const where = isUuid(id) ? { OR: [{ id }, { publicKey: id }] } : { publicKey: id };
+
   const ticket = await prisma.ticket.findFirst({
-    where: {
-      OR: [{ id }, { publicKey: id }],
-    },
+    where,
     include: includeRequester,
   });
 
   return ticket;
 };
 
+const updateStatus = async (id: string, status: TicketStatus) => {
+  const where = isUuid(id) ? { OR: [{ id }, { publicKey: id }] } : { publicKey: id };
+
+  const existingTicket = await prisma.ticket.findFirst({
+    where,
+    select: {
+      id: true,
+    },
+  });
+
+  if (!existingTicket) {
+    return null;
+  }
+
+  return prisma.ticket.update({
+    where: {
+      id: existingTicket.id,
+    },
+    data: {
+      status,
+    },
+    include: includeRequester,
+  });
+};
+
 export const ticketRepository = {
   list,
   getById,
+  updateStatus,
 };
